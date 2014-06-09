@@ -8,13 +8,13 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 @Mod(modid = ExampleMod.MODID, version = ExampleMod.VERSION)
 public class ResourceMountain
 {
-    public static final String MODID = "examplemod";
+    public static final String MODID = "nrmountain";
     public static final String VERSION = "1.0";
     
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
 		// some example code
-        System.out.println("DIRT BLOCK >> "+Blocks.dirt.getUnlocalizedName());
+        System.out.println("creating natural resource mountians!");
     }
 }
