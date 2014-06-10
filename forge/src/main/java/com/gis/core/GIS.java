@@ -49,9 +49,9 @@ public class GIS
     	Block modBlock = new TestBlock(Material.fire)
     		.setHardness(0.5F)
     		.setStepSound(Block.soundTypePiston)
-    		.setBlockName("modBlock")
+    		.setBlockName("naturalResourceBlock")
     		.setCreativeTab(CreativeTabs.tabBlock);
-    	GameRegistry.registerBlock(modBlock, "modBlock");
+    	GameRegistry.registerBlock(modBlock, "naturalResourceBlock");
     	
     	Block naturalResource = new NaturalResourceBlock(Material.iron)
 			.setBlockName("Natural Resource")
