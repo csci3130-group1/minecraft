@@ -2,11 +2,10 @@ package com.gis.entity;
 
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EnumCreatureAttribute;
-import net.minecraft.entity.passive.EntityAmbientCreature;
-import net.minecraft.entity.passive.EntityCow;
+import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.world.World;
  
-public class EntityWorker extends EntityCow
+public class EntityWorker extends EntityVillager
 {
     public EntityWorker(World world)
     {
@@ -15,10 +14,11 @@ public class EntityWorker extends EntityCow
  
     public EnumCreatureAttribute getCreatureAttribute()
     {
-        return EnumCreatureAttribute.UNDEAD;
+        return EnumCreatureAttribute.UNDEFINED;
     }
 
-	public EntityCow createChild(EntityAgeable var1) {
+	public EntityVillager createChild(EntityAgeable var1) {
 		return null;
 	}
 }
+
