@@ -1,4 +1,4 @@
-package com.example.examplemod;
+package com.gis.block;
 
 import static org.junit.Assert.*;
 
