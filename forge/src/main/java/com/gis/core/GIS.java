@@ -21,8 +21,7 @@ import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
 @Mod(modid = GIS.MODID, version = GIS.VERSION)
-public class GIS
-{
+public class GIS {
 	/** An instance of the core GIS class. */
 	@Instance("GIS")
 	private static GIS instance;
