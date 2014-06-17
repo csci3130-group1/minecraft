@@ -42,23 +42,19 @@ public class GIS {
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	GameRegistry.registerWorldGenerator(worldGen, 0);
+    	
     }
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-    	Block modBlock = new TestBlock(Material.fire)
-    		.setHardness(0.5F)
-    		.setStepSound(Block.soundTypePiston)
-    		.setBlockName("naturalResourceBlock")
-    		.setCreativeTab(CreativeTabs.tabBlock);
-    	GameRegistry.registerBlock(modBlock, "naturalResourceBlock");
-    	
     	Block naturalResource = new NaturalResourceBlock(Material.iron)
-			.setBlockName("Natural Resource")
+			.setBlockName("naturalResourceBlock")
 			.setHardness(0.8f)
+			.setCreativeTab(CreativeTabs.tabBlock)
 			.setStepSound(Block.soundTypeStone);
-    	GameRegistry.registerBlock(naturalResource, "Natural Resource");
+    	GameRegistry.registerBlock(naturalResource, "naturalResourceBlock");
+    	
+    	GameRegistry.registerWorldGenerator(worldGen, 0);
     	
     	//Insantiate worker entities
     	EntityRegistry.registerGlobalEntityID(EntityWorker.class, "Worker", EntityRegistry.findGlobalUniqueEntityId(), 1, 2);
