@@ -2,20 +2,17 @@ package com.gis.chore;
 
 import java.io.Serializable;
 
-import com.gis.core.GIS;
-import com.gis.entity.AbstractEntity;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.nbt.NBTTagCompound;
+
+import com.gis.entity.EntityWorker;
 
 /**
  * Defines a chore that can be run by an AbstractEntity.
  */
 public abstract class AbstractChore implements Serializable {
 	/**The entity performing this chore.*/
-	public AbstractEntity owner;
+	public EntityWorker owner;
 	
 	/**Has beginChore() been ran?*/
 	public boolean hasBegun;
@@ -28,7 +25,7 @@ public abstract class AbstractChore implements Serializable {
 	 * 
 	 * @param 	entity	The entity that will be performing the chore.
 	 */
-	public AbstractChore(AbstractEntity entity)
+	public AbstractChore(EntityWorker entity)
 	{
 		owner = entity;
 	}

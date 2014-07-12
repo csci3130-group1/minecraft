@@ -3,21 +3,22 @@ package com.gis.chore;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 
-import com.gis.core.Constants;
-import com.gis.core.GIS;
-import com.gis.entity.AbstractEntity;
-import com.gis.logic.LogicHelper;
-import com.gis.logic.Point3D;
+import org.apache.logging.log4j.Level;
 
 import net.minecraft.block.Block;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.Item.ToolMaterial;
 import net.minecraft.item.ItemPickaxe;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
+
+import com.gis.core.Constants;
+import com.gis.entity.EntityWorker;
+import com.gis.logic.LogicHelper;
+import com.gis.logic.Point3D;
+
+import cpw.mods.fml.common.FMLLog;
 
 
 /**
@@ -89,7 +90,7 @@ public class ChoreMining extends AbstractChore {
 	 * 
 	 * @param 	entity	The entity performing the chore.
 	 */
-	public ChoreMining(AbstractEntity entity)
+	public ChoreMining(EntityWorker entity)
 	{
 		super(entity);
 	}
@@ -105,15 +106,20 @@ public class ChoreMining extends AbstractChore {
 	 * @param 	oreType		(Passive only) The type of ore that should be searched for.
 	 * @param 	distance	(Active only) The distance that the entity should mine.
 	 */
-	public ChoreMining(AbstractEntity entity, int mode, Block block, int entryIndex, int direction, int distance) {
+	public ChoreMining(EntityWorker entity, int mode, Block block, int entryIndex, int direction, int distance) {
 		super(entity);
 		this.entryIndex = entryIndex;
+		
+
+		FMLLog.getLogger().log(Level.INFO, "LOG TESTING");
 
 		this.inPassiveMode = mode == 0 ? true : false;
 		this.searchBlock = block;
 		this.maxDistance = distance;
 		this.heading = direction;
 		//this.heading = LogicHelper.getHeadingRelativeToPlayerAndSpecifiedDirection(entity.worldObj.getPlayerEntityByName(entity.lastInteractingPlayer), direction);
+
+		Point3D nearestBlock = getNearestBlockCoordinates();
 		this.delayInterval = getDelayForToolType(entity.getTool());
 		this.notifyInterval = Constants.SECOND * 10;
 	}
@@ -139,7 +145,6 @@ public class ChoreMining extends AbstractChore {
 		if (inPassiveMode) {
 			runPassiveAI();
 		}
-
 		else {
 			runActiveAI();
 		}
@@ -153,18 +158,6 @@ public class ChoreMining extends AbstractChore {
 	@Override
 	public void endChore() {
 		hasEnded = true;
-
-		/*if (owner.worldObj.isRemote)
-		{
-			GIS.packetPipeline.sendPacketToServer(new Packet(EnumPacketType.AddAI, owner.getEntityId()));
-		}
-
-		else
-		{
-			GIS.packetPipeline.sendPacketToAllPlayers(new Packet(EnumPacketType.SetChore, owner.getEntityId(), this));
-			GIS.packetPipeline.sendPacketToAllPlayers(new Packet(EnumPacketType.AddAI, owner.getEntityId()));
-		}*/
-
 		owner.addAI();
 	}
 
@@ -198,7 +191,7 @@ public class ChoreMining extends AbstractChore {
 
 			catch (IllegalAccessException e) {
 				//GIS.getInstance().getLogger().log(e);
-				System.out.println("Exception in writing to NBT: "+e);
+				FMLLog.getLogger().log(Level.INFO, "Exception in writing to NBT: "+e);
 				continue;
 			}
 		}
@@ -235,7 +228,7 @@ public class ChoreMining extends AbstractChore {
 			catch (IllegalAccessException e)
 			{
 				//GIS.getInstance().getLogger().log(e);
-				System.out.println("Exception in reading from NBT: "+e);
+				FMLLog.getLogger().log(Level.INFO, "Exception in reading from NBT: "+e);
 				continue;
 			}
 		}
@@ -294,6 +287,15 @@ public class ChoreMining extends AbstractChore {
 	private void runActiveAI() {
 		doLookTowardsHeading();
 
+
+		final Point3D nearestBlock = getNearestBlockCoordinates();
+		nextX = nearestBlock.iPosX;
+		nextY = nearestBlock.iPosY;
+		nextZ = nearestBlock.iPosZ;
+		FMLLog.getLogger().log(Level.INFO, "\n\nGO TO "+nearestBlock+"\n\n");
+		owner.getNavigator().setPath(owner.getNavigator().getPathToXYZ((int)nextX, (int)nextY, (int)nextZ), Constants.SPEED_WALK);
+		/*
+
 		//Check if the coordinates for the next block to mine have been assigned.
 		if (hasNextPath) {
 			if (LogicHelper.getDistanceToXYZ(startX, startY, startZ, nextX, nextY, nextZ) > maxDistance) {
@@ -333,7 +335,7 @@ public class ChoreMining extends AbstractChore {
 		//No path, find one
 		else {
 			doSetNextPath();
-		}
+		}*/
 	}
 	
 	private Point3D getNearestBlockCoordinates() {
@@ -379,7 +381,8 @@ public class ChoreMining extends AbstractChore {
 	}
 
 	private boolean hasPick() {
-		return owner.getTool() != null;
+		return true;
+		//return owner.getTool() != null;
 	}
 
 	//Unused in single player I think
@@ -514,10 +517,12 @@ public class ChoreMining extends AbstractChore {
 	}
 
 	private void endForNoBlocks() {
+		System.out.println("\n\nNO BLOCKS FOUND\n\n");
 		endChore();
 	}
 
 	private void endForFinished() {
+		System.out.println("\n\nMINING CHORE FINISHED\n\n");
 		endChore();
 	}
 }

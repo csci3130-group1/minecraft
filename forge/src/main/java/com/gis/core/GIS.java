@@ -35,7 +35,7 @@ public class GIS {
 	public Map<Integer, Integer> idsMap = new HashMap<Integer, Integer>();
 
 	/**Map of GIS ids and their associated entity. Key = mcaId, Value = abstractEntity. */
-	public Map<Integer, AbstractEntity> entitiesMap = new HashMap<Integer, AbstractEntity>();
+	public Map<Integer, EntityWorker> entitiesMap = new HashMap<Integer, EntityWorker>();
     
 
 	
@@ -54,7 +54,7 @@ public class GIS {
 			.setStepSound(Block.soundTypeStone);
     	GameRegistry.registerBlock(naturalResource, "naturalResourceBlock");
     	
-    	GameRegistry.registerWorldGenerator(worldGen, 0);
+    	//GameRegistry.registerWorldGenerator(worldGen, 0);
     	
     	//Insantiate worker entities
     	EntityRegistry.registerGlobalEntityID(EntityWorker.class, "Worker", EntityRegistry.findGlobalUniqueEntityId(), 1, 2);
