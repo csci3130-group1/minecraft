@@ -39,6 +39,9 @@ public class ChoreMining extends AbstractChore {
 
 	/** The Z coordinates that the active mining chore stated at.*/
 	public double startZ;
+	
+	/** The Point3D of the block*/
+	private Point3D nextBlockPosition;
 
 	/** The X coordinates that the owner should be moving to. (Active only)*/
 	public double nextX;
@@ -85,6 +88,7 @@ public class ChoreMining extends AbstractChore {
 	/** The ID of the block that a passive miner is looking for.*/
 	public transient Block searchBlock;
 
+
 	/**
 	 * Constructor
 	 * 
@@ -109,9 +113,6 @@ public class ChoreMining extends AbstractChore {
 	public ChoreMining(EntityWorker entity, int mode, Block block, int entryIndex, int direction, int distance) {
 		super(entity);
 		this.entryIndex = entryIndex;
-		
-
-		FMLLog.getLogger().log(Level.INFO, "LOG TESTING");
 
 		this.inPassiveMode = mode == 0 ? true : false;
 		this.searchBlock = block;
@@ -142,12 +143,13 @@ public class ChoreMining extends AbstractChore {
 
 	@Override
 	public void runChoreAI() {
-		if (inPassiveMode) {
+		/*if (inPassiveMode) {
 			runPassiveAI();
 		}
 		else {
 			runActiveAI();
-		}
+		}*/
+		runActiveAI();
 	}
 
 	@Override
@@ -157,6 +159,7 @@ public class ChoreMining extends AbstractChore {
 
 	@Override
 	public void endChore() {
+		FMLLog.getLogger().log(Level.WARN, "\n\nEND FOR NO PARTICULAR REASON\n\n");
 		hasEnded = true;
 		owner.addAI();
 	}
@@ -255,7 +258,10 @@ public class ChoreMining extends AbstractChore {
 	/**
 	 * Runs the passive mining AI.
 	 */
+	//Not needed?
+	/*
 	private void runPassiveAI()	{
+		FMLLog.getLogger().log(Level.INFO, "RUNING PASSIVE AI");
 		if (hasPick()) {
 			if (notifyCounter >= notifyInterval) {
 				final Point3D nearestBlock = getNearestBlockCoordinates();
@@ -280,33 +286,39 @@ public class ChoreMining extends AbstractChore {
 			endChore();
 		}
 	}
+	*/
 
 	/**
 	 * Runs the active mining AI.
+	 * Finds the nearest block if we have no 
 	 */
+
 	private void runActiveAI() {
 		doLookTowardsHeading();
-
-
-		final Point3D nearestBlock = getNearestBlockCoordinates();
-		nextX = nearestBlock.iPosX;
-		nextY = nearestBlock.iPosY;
-		nextZ = nearestBlock.iPosZ;
-		FMLLog.getLogger().log(Level.INFO, "\n\nGO TO "+nearestBlock+"\n\n");
-		owner.getNavigator().setPath(owner.getNavigator().getPathToXYZ((int)nextX, (int)nextY, (int)nextZ), Constants.SPEED_WALK);
-		/*
-
-		//Check if the coordinates for the next block to mine have been assigned.
-		if (hasNextPath) {
+		
+		if (!hasNextPath) {
+			final Point3D nextBlockPosition = getNearestBlockCoordinates();
+			//If we haven't found any blocks, we have none left in the area, give up?
+			if (nextBlockPosition == null) {
+				endForNoBlocks();
+				return;
+			}
+			nextX = nextBlockPosition.iPosX;
+			nextY = nextBlockPosition.iPosY;
+			nextZ = nextBlockPosition.iPosZ;
+			FMLLog.getLogger().log(Level.INFO, "PATH SET: GO TO "+nextBlockPosition);
+			hasNextPath = true;
+		} else {
+			//If someone else has already mined this block, try to find a new block
+			if (owner.worldObj.getBlock((int)nextX, (int)nextY, (int)nextZ) == Blocks.air) {
+				hasNextPath = false;
+				return;
+			}
+			//Check if the block is too far (probably irrelevant and should be removed
 			if (LogicHelper.getDistanceToXYZ(startX, startY, startZ, nextX, nextY, nextZ) > maxDistance) {
 				endForFinished();
 				return;
-			}
-			else {
-				if (isNextBlockInvalid()) {
-					endForNoBlocks();
-					return;
-				}
+			} else {
 				//Close enough to block to hit it
 				if (LogicHelper.getDistanceToXYZ(owner.posX, owner.posY, owner.posZ, nextX, nextY, nextZ) <= 2.5) {
 					//If we're not finished mining the block, based on the delayInterval, swing the pick
@@ -333,53 +345,25 @@ public class ChoreMining extends AbstractChore {
 			}
 		}
 		//No path, find one
-		else {
-			doSetNextPath();
-		}*/
+		//else {
+		//	doSetNextPath();
+		//}
 	}
 	
 	private Point3D getNearestBlockCoordinates() {
 		final double lastDistance = 100D;
 		Point3D nearestPoint = null;
 
-		for (final Point3D point : LogicHelper.getNearbyBlocks_StartAtBottom(owner, searchBlock, 20)) {
+		for (final Point3D point : LogicHelper.getNearbyBlocks_StartAtBottom(owner, searchBlock, 200)) {
 			final double thisDistance = LogicHelper.getDistanceToXYZ(owner.posX, owner.posY, owner.posZ, point.dPosX, point.dPosY, point.dPosZ);
 
 			if (thisDistance < lastDistance) {
 				nearestPoint = point;
 			}
 		}
-
 		return nearestPoint;
 	}
 	
-	/*private boolean isNextBlockInvalid() 
-	{
-		final Block block = owner.worldObj.getBlock((int)nextX, (int)nextY, (int)nextZ);
-
-		for (final Block invalidBlock : Constants.UNMINEABLE_BLOCKS)
-		{
-			if (block == invalidBlock)
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}*/
-	//Reversal of the invalid block method, to return true if the block is NOT one of our mineable blocks
-	private boolean isNextBlockInvalid() {
-		final Block block = owner.worldObj.getBlock((int)nextX, (int)nextY, (int)nextZ);
-
-		for (final Block validBlock : Constants.MINEABLE_BLOCKS) {
-			if (block == validBlock) {
-				return false;
-			}
-		}
-
-		return true;
-	}
-
 	private boolean hasPick() {
 		return true;
 		//return owner.getTool() != null;
@@ -412,12 +396,13 @@ public class ChoreMining extends AbstractChore {
 	}*/
 
 	private void doLookTowardsHeading()	{
-		//if (owner.worldObj.isRemote) { - not important since we're always singleplayer
+		if (owner.worldObj.isRemote) {
 			owner.setRotationYawHead(heading);
-		//}
+		}
 	}
 
-	private void doSetNextPath() {
+	//Unnecessary I think
+	/*private void doSetNextPath() {
 		int scanDistance = 0;
 
 		while (scanDistance != maxDistance) {
@@ -454,7 +439,7 @@ public class ChoreMining extends AbstractChore {
 		if (scanDistance == maxDistance) {
 			endForNoBlocks();
 		}
-	}
+	}*/
 
 	private void doHarvestBlock(Block nextBlock) {
 		Block yieldBlock = nextBlock;
@@ -492,21 +477,17 @@ public class ChoreMining extends AbstractChore {
 
 			if (yieldBlock != null) {
 				stackToAdd = new ItemStack(yieldBlock, yieldAmount, yieldMeta);
-			}
-
-			else {
+			} else {
 				stackToAdd = new ItemStack(yieldItem, yieldAmount, yieldMeta);
 			}
 
-			//stackToAdd.damageItem(yieldMeta, owner);
+			//stackToAdd.damageItem(yieldMeta, owner); damage tool
 			owner.addToInventory(stackToAdd);
 		}
 
 		catch (NullPointerException e) {
-			//GIS.getInstance().getLogger().log("Unable to mine block at " + nextX + ", " + nextY + ", " + nextZ);
-			System.out.println("Unable to mine block at " + nextX + ", " + nextY + ", " + nextZ);
+			FMLLog.getLogger().log(Level.INFO, "\n\nUnable to mine block at " + nextX + ", " + nextY + ", " + nextZ+"\n\n");
 		}
-
 		owner.worldObj.setBlock((int)nextX, (int)nextY, (int)nextZ, Blocks.air);
 	}
 
@@ -517,12 +498,12 @@ public class ChoreMining extends AbstractChore {
 	}
 
 	private void endForNoBlocks() {
-		System.out.println("\n\nNO BLOCKS FOUND\n\n");
+		FMLLog.getLogger().log(Level.WARN, "\n\nEND FOR NO BLOCKS FOUND\n\n");
 		endChore();
 	}
 
 	private void endForFinished() {
-		System.out.println("\n\nMINING CHORE FINISHED\n\n");
+		FMLLog.getLogger().log(Level.WARN, "\n\nEND FOR MINING CHORE FINISHED\n\n");
 		endChore();
 	}
 }

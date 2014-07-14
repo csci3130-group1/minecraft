@@ -55,6 +55,7 @@ public class EntityWorker extends EntityVillager {
 
 		//getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MCA.getInstance().getModProperties().villagerBaseHealth);
 		//setHealth(GIS.getInstance().getModProperties().villagerBaseHealth);
+        isInChoreMode = true;
 		setHealth(20);
 		setSize(Constants.WIDTH_ADULT, Constants.HEIGHT_ADULT);
 		tool = null;
