@@ -306,7 +306,6 @@ public class ChoreMining extends AbstractChore {
 			nextX = nextBlockPosition.iPosX;
 			nextY = nextBlockPosition.iPosY;
 			nextZ = nextBlockPosition.iPosZ;
-			FMLLog.getLogger().log(Level.INFO, "PATH SET: GO TO "+nextBlockPosition);
 			hasNextPath = true;
 		} else {
 			//If someone else has already mined this block, try to find a new block

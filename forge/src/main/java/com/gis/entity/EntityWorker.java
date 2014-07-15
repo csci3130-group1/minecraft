@@ -3,6 +3,8 @@ package com.gis.entity;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.Level;
+
 import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.EnumCreatureAttribute;
@@ -15,6 +17,7 @@ import net.minecraft.entity.ai.EntityAISwimming;
 import net.minecraft.entity.ai.EntityAIWander;
 import net.minecraft.entity.ai.EntityAIWatchClosest;
 import net.minecraft.entity.ai.EntityAIWatchClosest2;
+import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.passive.EntityVillager;
 import net.minecraft.entity.player.EntityPlayer;
@@ -31,16 +34,20 @@ import net.minecraft.world.World;
 
 
 
+import net.minecraftforge.common.ISpecialArmor.ArmorProperties;
+
 import com.gis.chore.ChoreMining;
 import com.gis.core.Constants;
 import com.gis.core.GIS;
 
-public class EntityWorker extends EntityVillager {
+import cpw.mods.fml.common.FMLLog;
+
+public class EntityWorker extends EntityZombie {
 
 	public Map<String, ItemStack> inventory = new HashMap<String, ItemStack>();
 	public int gisID;
 	public ChoreMining miningChore = new ChoreMining(this, 1, Constants.MINEABLE_BLOCKS[0], 0, 0, 1000);
-	protected Item tool;
+	protected ItemStack tool;
 	
 	//AI stuff
 	public boolean isInChoreMode = false;
@@ -58,7 +65,14 @@ public class EntityWorker extends EntityVillager {
         isInChoreMode = true;
 		setHealth(20);
 		setSize(Constants.WIDTH_ADULT, Constants.HEIGHT_ADULT);
-		tool = null;
+		tool = new ItemStack(Items.iron_pickaxe);
+		this.setCurrentItemOrArmor(0, new ItemStack(Items.diamond_pickaxe));
+		this.setCurrentItemOrArmor(1, new ItemStack(Items.diamond_helmet));;
+		this.setCurrentItemOrArmor(2, new ItemStack(Items.diamond_chestplate));;
+		this.setCurrentItemOrArmor(3, new ItemStack(Items.diamond_leggings));;
+		this.setCurrentItemOrArmor(4, new ItemStack(Items.diamond_boots));
+
+		FMLLog.getLogger().log(Level.INFO, "TOOL IS: "+tool);
     }
  
     public EnumCreatureAttribute getCreatureAttribute() {
@@ -134,7 +148,10 @@ public class EntityWorker extends EntityVillager {
 	 * Get's the entity's tool
 	 */
     public Item getTool() {
-    	return tool;
+    	if (tool != null) {
+    		return tool.getItem();
+    	}
+    	return null;
     }
     
 	/**
