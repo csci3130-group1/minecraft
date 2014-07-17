@@ -4,11 +4,11 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-public class NaturalResourceBlockTest {
+public class NaturalResourceTest {
 
 	@Test
-	public void testBlock() {
-		assertTrue(true);
+	public void test() {
+		fail("Not yet implemented");
 	}
 
 }
