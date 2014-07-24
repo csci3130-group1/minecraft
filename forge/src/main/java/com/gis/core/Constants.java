@@ -12,8 +12,9 @@ public class Constants {
 	 */
 	public static final Block[] MINEABLE_BLOCKS = 
 	{
-		Blocks.coal_ore,
-		//GameRegistry.findBlock(GIS.MODID, "naturalResourceBlock")
+		//Block.getBlockFromName("naturalResourceBlock"),
+		//GameRegistry.findBlock(GIS.MODID, "naturalResourceBlock"),
+		Blocks.coal_ore
 	};
 	
 	public static final float HEIGHT_ADULT = 1.8F;

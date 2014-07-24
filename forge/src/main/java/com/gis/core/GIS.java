@@ -58,9 +58,8 @@ public class GIS {
     	
     	//Insantiate worker entities
     	EntityRegistry.registerGlobalEntityID(EntityWorker.class, "Worker", EntityRegistry.findGlobalUniqueEntityId(), 1, 2);
-    	
-	EntityRegistry.registerModEntity(EntityWorker.class, "Worker", 1, this, 50, 2, true);
-	EntityRegistry.addSpawn(EntityWorker.class, 1, 10, 10, EnumCreatureType.creature);
+		EntityRegistry.registerModEntity(EntityWorker.class, "Worker", 1, this, 50, 2, true);
+		EntityRegistry.addSpawn(EntityWorker.class, 1, 10, 10, EnumCreatureType.creature);
 
 
     }

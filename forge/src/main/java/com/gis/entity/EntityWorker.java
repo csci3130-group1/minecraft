@@ -44,14 +44,17 @@ import cpw.mods.fml.common.FMLLog;
 
 public class EntityWorker extends EntityZombie {
 
-	public Map<String, ItemStack> inventory = new HashMap<String, ItemStack>();
 	public int gisID;
-	public ChoreMining miningChore = new ChoreMining(this, 1, Constants.MINEABLE_BLOCKS[0], 0, 0, 1000);
-	protected ItemStack tool;
+	
+	private Map<String, ItemStack> inventory = new HashMap<String, ItemStack>();
+	private ItemStack tool;
 	
 	//AI stuff
+	public ChoreMining miningChore;
 	public boolean isInChoreMode = false;
 	public boolean addedAI;
+	private int counter = 0;
+	private int miningCheckDistance = 200;
 	
 	//States
 	public boolean isFollowing;
@@ -59,20 +62,17 @@ public class EntityWorker extends EntityZombie {
 	
     public EntityWorker(World world) {
         super(world);
-
-		//getEntityAttribute(SharedMonsterAttributes.maxHealth).setBaseValue(MCA.getInstance().getModProperties().villagerBaseHealth);
-		//setHealth(GIS.getInstance().getModProperties().villagerBaseHealth);
-        isInChoreMode = true;
+        
 		setHealth(20);
 		setSize(Constants.WIDTH_ADULT, Constants.HEIGHT_ADULT);
-		tool = new ItemStack(Items.iron_pickaxe);
-		this.setCurrentItemOrArmor(0, new ItemStack(Items.diamond_pickaxe));
-		this.setCurrentItemOrArmor(1, new ItemStack(Items.diamond_helmet));;
-		this.setCurrentItemOrArmor(2, new ItemStack(Items.diamond_chestplate));;
-		this.setCurrentItemOrArmor(3, new ItemStack(Items.diamond_leggings));;
-		this.setCurrentItemOrArmor(4, new ItemStack(Items.diamond_boots));
+		tool = new ItemStack(Items.wooden_pickaxe);
+		this.setCurrentItemOrArmor(0, new ItemStack(tool.getItem()));
+		this.setCurrentItemOrArmor(1, new ItemStack(Items.leather_helmet));;
+		this.setCurrentItemOrArmor(2, new ItemStack(Items.leather_chestplate));;
+		this.setCurrentItemOrArmor(3, new ItemStack(Items.leather_leggings));;
+		this.setCurrentItemOrArmor(4, new ItemStack(Items.leather_boots));
 
-		FMLLog.getLogger().log(Level.INFO, "TOOL IS: "+tool);
+		FMLLog.getLogger().log(Level.INFO, "TOOL IS: "+tool.getDisplayName());
     }
  
     public EnumCreatureAttribute getCreatureAttribute() {
@@ -137,7 +137,20 @@ public class EntityWorker extends EntityZombie {
 			else {
 				miningChore.beginChore();
 			}
+		} else {
+			if (counter < Constants.MINUTE)
+				counter++;
+			else {
+				isInChoreMode = MakeChore();
+				miningCheckDistance += 200;
+				counter = 0;
+			}
 		}
+	}
+	
+	private boolean MakeChore() {
+    	miningChore = new ChoreMining(this, 1, Constants.MINEABLE_BLOCKS[0], miningCheckDistance);
+    	return true;
 	}
 	
     ///////////////////
