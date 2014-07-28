@@ -29,7 +29,8 @@ public class GIS {
     public static final String MODID = "gis";
     public static final String VERSION = "1.0";
     
-    public static GisWorldGenerator worldGen = new GisWorldGenerator();
+    EventManager worldGen = new EventManager();
+    public static Block resourceBlock;
     
     /**Map of GIS ids and entity ids. Key = mcaId, Value = entityId.**/
 	public Map<Integer, Integer> idsMap = new HashMap<Integer, Integer>();
@@ -47,19 +48,17 @@ public class GIS {
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-    	Block naturalResource = new NaturalResourceBlock(Material.iron)
-			.setBlockName("naturalResourceBlock")
-			.setHardness(0.8f)
-			.setCreativeTab(CreativeTabs.tabBlock)
-			.setStepSound(Block.soundTypeStone);
-    	GameRegistry.registerBlock(naturalResource, "naturalResourceBlock");
     	
-    	//GameRegistry.registerWorldGenerator(worldGen, 0);
+    	resourceBlock = new NaturalResourceBlock();
+    	GameRegistry.registerBlock(resourceBlock, "naturalResourceBlock");
+    	
+    	
+    	GameRegistry.registerWorldGenerator(worldGen, 0);
     	
     	//Insantiate worker entities
     	EntityRegistry.registerGlobalEntityID(EntityWorker.class, "Worker", EntityRegistry.findGlobalUniqueEntityId(), 1, 2);
 		EntityRegistry.registerModEntity(EntityWorker.class, "Worker", 1, this, 50, 2, true);
-		EntityRegistry.addSpawn(EntityWorker.class, 1, 10, 10, EnumCreatureType.creature);
+		EntityRegistry.addSpawn(EntityWorker.class, 1, 10, 10, EnumCreatureType.ambient);
 
 
     }
