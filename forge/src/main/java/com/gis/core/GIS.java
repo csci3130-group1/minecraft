@@ -16,11 +16,12 @@ import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.common.registry.GameRegistry;
 import cpw.mods.fml.common.registry.LanguageRegistry;
 
-@Mod(modid = GIS.MODID, version = GIS.VERSION)
+@Mod(modid = GIS.MODID, version = GIS.VERSION, name = GIS.NAME)
 public class GIS {
 	/** An instance of the core GIS class. */
 	@Instance("GIS")
@@ -28,9 +29,12 @@ public class GIS {
 		
     public static final String MODID = "gis";
     public static final String VERSION = "1.0";
+    public static final String NAME = "Going it Solow";
     
-    EventManager worldGen = new EventManager();
-    public static Block resourceBlock;
+    //EventManager worldGen = new EventManager();
+    public static NaturalResourceBlock naturalResourceBlock;
+    public static Block resourceStructure;
+    public static int resourcesPlaced = 0;
     
     /**Map of GIS ids and entity ids. Key = mcaId, Value = entityId.**/
 	public Map<Integer, Integer> idsMap = new HashMap<Integer, Integer>();
@@ -39,23 +43,28 @@ public class GIS {
 	public Map<Integer, EntityWorker> entitiesMap = new HashMap<Integer, EntityWorker>();
     
 
-	
+  @EventHandler
+    public void preinit(FMLPreInitializationEvent event)
+    {
+        
+        naturalResourceBlock = new NaturalResourceBlock();
+    	naturalResourceBlock.setBlockName("naturalResourceBlock").setCreativeTab(CreativeTabs.tabMisc).setStepSound(Block.soundTypeGlass);
+    	GameRegistry.registerBlock(naturalResourceBlock, "naturalResourceBlock");
+    	
+    	resourceStructure = new ResourceStructure();
+    	resourceStructure.setBlockName("resourceStructure").setCreativeTab(CreativeTabs.tabMisc).setStepSound(Block.soundTypeAnvil);
+    	GameRegistry.registerBlock(resourceStructure, "resourceStructure");
+    }
+        
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-    	
+
     }
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
-    	
-    	resourceBlock = new NaturalResourceBlock();
-    	GameRegistry.registerBlock(resourceBlock, "naturalResourceBlock");
-    	
-    	
-    	GameRegistry.registerWorldGenerator(worldGen, 0);
-    	
-    	//Insantiate worker entities
+    	//Register worker entities
     	EntityRegistry.registerGlobalEntityID(EntityWorker.class, "Worker", EntityRegistry.findGlobalUniqueEntityId(), 1, 2);
 		EntityRegistry.registerModEntity(EntityWorker.class, "Worker", 1, this, 50, 2, true);
 		EntityRegistry.addSpawn(EntityWorker.class, 1, 10, 10, EnumCreatureType.ambient);
@@ -64,7 +73,7 @@ public class GIS {
     }
 
     
-    /**
+	/**
 	 * @return	An instance of GIS.
 	 */
 	public static GIS getInstance()

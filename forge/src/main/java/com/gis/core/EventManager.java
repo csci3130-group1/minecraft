@@ -36,15 +36,11 @@ public class EventManager implements IWorldGenerator
  
     private void generateSurface(World world, Random random, int x, int z)
     {
-        this.addOreSpawn(GIS.resourceBlock, world, random, x, z, 16, 16, 20 + random.nextInt(3), 100, 1, 100);
     }
  
     private void generateNether(World world, Random random, int x, int z)
     {
-        int Xcoord = x + random.nextInt(16);
-        int Ycoord = 10 + random.nextInt(128);
-        int Zcoord = z + random.nextInt(16);
-        (new WorldGenMinable(GIS.resourceBlock, 1, 15, Blocks.netherrack)).generate(world, random, Xcoord, Ycoord, Zcoord);
+
     }
  
     /**
