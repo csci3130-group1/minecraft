@@ -12,6 +12,8 @@ import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EnumCreatureType;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.biome.BiomeGenBase;
+import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -59,11 +61,13 @@ public class GIS {
     @EventHandler
     public void init(FMLInitializationEvent event)
     {
-
+    	FMLCommonHandler.instance().bus().register(new KeyHandler());
     }
     @EventHandler
     public void load(FMLInitializationEvent event)
     {
+    	MinecraftForge.EVENT_BUS.register(RenderHandler.instance);
+
     	//Register worker entities
     	EntityRegistry.registerGlobalEntityID(EntityWorker.class, "Worker", EntityRegistry.findGlobalUniqueEntityId(), 1, 2);
 		EntityRegistry.registerModEntity(EntityWorker.class, "Worker", 1, this, 50, 2, true);

@@ -1,6 +1,7 @@
 package com.gis.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockFalling;
 import net.minecraft.block.BlockOre;
 import net.minecraft.block.BlockSand;
 import net.minecraft.block.material.Material;
@@ -10,6 +11,7 @@ import java.util.List;
 import org.apache.logging.log4j.Level;
 
 import com.gis.core.GIS;
+import com.google.common.collect.SetMultimap;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -31,6 +33,7 @@ public class NaturalResourceBlock extends BlockSand {
 	public NaturalResourceBlock()
 	{
 		super();
+		setHarvestLevel("pickaxe",0);
 	}
 
 	@Override

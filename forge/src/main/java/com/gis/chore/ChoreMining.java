@@ -16,6 +16,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import org.apache.logging.log4j.Level;
 
 import com.gis.core.Constants;
+import com.gis.core.GIS;
 import com.gis.entity.EntityWorker;
 import com.gis.logic.LogicHelper;
 import com.gis.logic.Point3D;
@@ -376,6 +377,9 @@ public class ChoreMining extends AbstractChore {
 
 			//stackToAdd.damageItem(yieldMeta, owner); damage tool
 			owner.addToInventory(stackToAdd);
+			FMLLog.getLogger().log(Level.INFO, "Block mined");
+			GIS.resourcesPlaced-=1;
+
 		}
 
 		catch (NullPointerException e) {
