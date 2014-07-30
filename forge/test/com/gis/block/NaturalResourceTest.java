@@ -2,13 +2,16 @@ package com.gis.block;
 
 import static org.junit.Assert.*;
 
+import org.junit.Assert;
 import org.junit.Test;
 
-public class NaturalResourceTest {
+public class NaturalResourceBlockTest {
 
+	NaturalResourceBlock block = new NaturalResourceBlock(null);
 	@Test
-	public void Test() {
-		Assert.assertTrue(true);
+	public void test() {
+		if(block!=null)
+			Assert.assertTrue(true);
 	}
 
 }
