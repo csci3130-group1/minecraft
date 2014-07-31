@@ -35,8 +35,11 @@ public class GIS {
     
     //EventManager worldGen = new EventManager();
     public static NaturalResourceBlock naturalResourceBlock;
-    public static Block resourceStructure;
-    public static int resourcesPlaced = 0;
+    public static int resourcesMined;
+    public static int workersPlaced;
+    public static int output;
+    public static int techLevel;
+
     
     /**Map of GIS ids and entity ids. Key = mcaId, Value = entityId.**/
 	public Map<Integer, Integer> idsMap = new HashMap<Integer, Integer>();
@@ -53,9 +56,12 @@ public class GIS {
     	naturalResourceBlock.setBlockName("naturalResourceBlock").setCreativeTab(CreativeTabs.tabMisc).setStepSound(Block.soundTypeGlass);
     	GameRegistry.registerBlock(naturalResourceBlock, "naturalResourceBlock");
     	
-    	resourceStructure = new ResourceStructure();
-    	resourceStructure.setBlockName("resourceStructure").setCreativeTab(CreativeTabs.tabMisc).setStepSound(Block.soundTypeAnvil);
-    	GameRegistry.registerBlock(resourceStructure, "resourceStructure");
+    	workersPlaced = 0;
+    	output = 99999;
+    	techLevel = 1;
+    	resourcesMined = 0;
+    	
+    
     }
         
     @EventHandler

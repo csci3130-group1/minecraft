@@ -59,11 +59,12 @@ public class EntityWorker extends EntityZombie {
 	//States
 	public boolean isFollowing;
 	public boolean isStaying;
+	private boolean hasSpawned = false;
 	
     public EntityWorker(World world) {
         super(world);
         
-		setHealth(20);
+		setHealth(100);
 		setSize(Constants.WIDTH_ADULT, Constants.HEIGHT_ADULT);
 		tool = new ItemStack(Items.wooden_pickaxe);
 		this.setCurrentItemOrArmor(0, new ItemStack(tool.getItem()));
@@ -73,6 +74,16 @@ public class EntityWorker extends EntityZombie {
 		this.setCurrentItemOrArmor(4, new ItemStack(Items.leather_boots));
 
 		FMLLog.getLogger().log(Level.INFO, "TOOL IS: "+tool.getDisplayName());
+    }
+    
+    @Override
+    public void onDeathUpdate() {
+    	++this.deathTime;
+    	if (this.deathTime == 20)
+        {
+    		this.setDead();
+    		GIS.workersPlaced--;
+        }
     }
  
     public EnumCreatureAttribute getCreatureAttribute() {
@@ -88,12 +99,22 @@ public class EntityWorker extends EntityZombie {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
+		if(!this.hasSpawned){
+			GIS.workersPlaced++;	//Increment counter of workers spawned
+			GIS.output-=2500;		//Base price to spawn a worker
+			this.hasSpawned = true;
+		}
 		//Check if their AI has been added.
 		if (!addedAI) {
 			addAI();
 			addedAI = true;
 		}
+		if(this.isDead) {
+    		GIS.workersPlaced--;
+		}
+		GIS.output-=1;
 		updateChores();
+		
 	}
 	
 

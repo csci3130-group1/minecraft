@@ -13,9 +13,17 @@ public void RenderGameOverlayEvent(net.minecraftforge.client.event.RenderGameOve
 // render everything onto the screen
 if (event.type == net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType.TEXT) {
 
-Integer test = GIS.resourcesPlaced;
+Integer resRem = GIS.resourcesMined;
+Integer workers = GIS.workersPlaced / 2;
+Integer output = GIS.output;
+Integer techLevel = GIS.techLevel;
 
-Draw.renderToHud("Resources remaining: " + test.toString());
+Draw.renderToHud("Workers: " + workers.toString(), 0, 0);
+Draw.renderToHud("Mined: " + resRem.toString(), 0, 10);
+Draw.renderToHud("Tech: " + techLevel.toString(), 0, 20);
+Draw.renderToHud("Output: " + output.toString(), 0, 30);
+
+
 
 }
 }

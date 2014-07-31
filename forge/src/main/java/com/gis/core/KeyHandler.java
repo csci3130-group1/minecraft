@@ -72,38 +72,7 @@ public class KeyHandler // note that before we extended KeyHandler, but that cla
 			FMLLog.getLogger().log(Level.INFO, "client is remote");
 			for(int j = 0; j <=5; j++) {
 				x=x+10;
-				for(int i = 4; i < 8; i++) {
-					world.setBlock(x, i, z, Blocks.sand);
-					world.setBlock(x+1, i, z, Blocks.sand);
-					world.setBlock(x+2, i, z, Blocks.sand);
-					world.setBlock(x+3, i, z, Blocks.sand);
-					world.setBlock(x+4, i, z, Blocks.sand);
-					
-					world.setBlock(x, i, z+1, Blocks.sand);
-					world.setBlock(x+1, i, z+1, Blocks.sand);
-					world.setBlock(x+2, i, z+1, Blocks.sand);
-					world.setBlock(x+3, i, z+1, Blocks.sand);
-					world.setBlock(x+4, i, z+1, Blocks.sand);
-
-					world.setBlock(x, i, z+2, Blocks.sand);
-					world.setBlock(x+1, i, z+2, Blocks.sand);
-					world.setBlock(x+2, i, z+2, Blocks.sand);
-					world.setBlock(x+3, i, z+2, Blocks.sand);
-					world.setBlock(x+4, i, z+2, Blocks.sand);
-					
-					world.setBlock(x, i, z+3, Blocks.sand);
-					world.setBlock(x+1, i, z+3, Blocks.sand);
-					world.setBlock(x+2, i, z+3, Blocks.sand);
-					world.setBlock(x+3, i, z+3, Blocks.sand);
-					world.setBlock(x+4, i, z+3, Blocks.sand);
-					
-					world.setBlock(x, i, z+4, Blocks.sand);
-					world.setBlock(x+1, i, z+4, Blocks.sand);
-					world.setBlock(x+2, i, z+4, Blocks.sand);
-					world.setBlock(x+3, i, z+4, Blocks.sand);
-					world.setBlock(x+4, i, z+4, Blocks.sand);
-				}
-				GIS.resourcesPlaced = GIS.resourcesPlaced + 100;
+				new ResourceStructure(world, x, 4, z);
 			}
 			
 		}		

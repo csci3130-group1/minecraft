@@ -378,7 +378,8 @@ public class ChoreMining extends AbstractChore {
 			//stackToAdd.damageItem(yieldMeta, owner); damage tool
 			owner.addToInventory(stackToAdd);
 			FMLLog.getLogger().log(Level.INFO, "Block mined");
-			GIS.resourcesPlaced-=1;
+			GIS.resourcesMined+=1;
+			GIS.output += GIS.techLevel * 1000;
 
 		}
 

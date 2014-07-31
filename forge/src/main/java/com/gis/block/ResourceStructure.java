@@ -13,17 +13,14 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
-public class ResourceStructure extends BlockSand {
+public class ResourceStructure {
 	
 	
-	public ResourceStructure(){
-		super();
-		setHarvestLevel("pickaxe",0);
+	public ResourceStructure(World world, int x, int y, int z){
+		placeStructure(world, x, y, z);
 	}
 	
-	@Override
-	public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase entity, ItemStack itemstack) {
-		super.onBlockPlacedBy(world, x, y, z, entity, itemstack);
+	public void placeStructure(World world, int x, int y, int z) {
 		
 		for(int i = y; i < 8; i++) {
 			world.setBlock(x, i, z, Blocks.sand);
@@ -56,13 +53,6 @@ public class ResourceStructure extends BlockSand {
 			world.setBlock(x+3, i, z+4, Blocks.sand);
 			world.setBlock(x+4, i, z+4, Blocks.sand);
 		}
-
-
-
-
-		FMLLog.getLogger().log(Level.WARN, GIS.resourcesPlaced);
-
-
 	}
 
 }
